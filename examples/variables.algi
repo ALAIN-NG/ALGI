@@ -1,16 +1,27 @@
 // Test des variables et calculs
 
-he age = 25
-he taille = 1.75
-he nom = "Alain"
+he age = 0
+he taille = 0.0
+he nom = ""
+he poids = 0.0
+
+tehap("Entrez votre nom : ")
+keksie(nom)
+tehap("Entrez votre age : ")
+keksie(age)
+tehap("Entrez votre taille (en mètres) : ")
+keksie(taille)
+tehap("Entrez votre poids (en kg) : ")
+keksie(poids)
 
 tehap("=== Informations personnelles ===")
 tehap("Nom: " + nom)
 tehap("Age: " + age)
 tehap("Taille: " + taille)
+tehap("Poids: " + poids)
 
 he est_majeur = (age >= 18)
 tehap("Majeur? " + est_majeur)
 
-he imc = taille * taille
-tehap("Taille au carre: " + imc)
+he imc = poids / (taille * taille)
+tehap("IMC: " + imc)
