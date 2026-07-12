@@ -1,0 +1,27 @@
+// Test des boucles
+
+tehap("=== Boucle WHILE ===")
+he i = 0
+w (i < 5)
+    tehap("i = " + i)
+    i = i + 1
+mi
+
+tehap("=== Boucle FOR avec liste ===")
+he nombres = bi[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+tehap(nombres[2])
+he somme = 0
+pou (nb dans nombres)
+    somme = somme + nb
+    tehap("Nombre: " + nb + ", Somme partielle: " + somme)
+mi
+
+tehap("Somme totale: " + somme)
+
+tehap("=== Boucle FOR sur caracteres ===")
+he mot = "ALGI"
+tehap(mot)
+pou (c dans mot)
+    tehap("Caractere: " + c)
+mi

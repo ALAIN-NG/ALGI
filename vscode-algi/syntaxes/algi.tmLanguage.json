@@ -1,0 +1,163 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "ALGI",
+  "scopeName": "source.algi",
+  "fileTypes": ["algi"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords-control" },
+    { "include": "#keywords-declaration" },
+    { "include": "#keywords-builtin-functions" },
+    { "include": "#keywords-boolean-null" },
+    { "include": "#keywords-logical" },
+    { "include": "#keywords-operator-word" },
+    { "include": "#keywords-list" },
+    { "include": "#keywords-types" },
+    { "include": "#operators" },
+    { "include": "#punctuation" },
+    { "include": "#function-call" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.algi",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.algi",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.algi",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.algi",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.algi",
+          "match": "\\b[0-9]+\\.[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.algi",
+          "match": "\\b[0-9]+\\b"
+        }
+      ]
+    },
+    "keywords-control": {
+      "name": "keyword.control.algi",
+      "match": "\\b(ke|kommenu|w|pou|mi|tem|peu|tela|tatem)\\b",
+      "comment": "ke=if, kommenu=else, w=while, pou=for, mi=fin de bloc, tem=return, peu=break, tela=try, tatem=catch"
+    },
+    "keywords-declaration": {
+      "patterns": [
+        {
+          "name": "storage.type.variable.algi",
+          "match": "\\b(he)\\b",
+          "comment": "he = let/déclaration de variable"
+        },
+        {
+          "name": "storage.type.function.algi",
+          "match": "\\b(fonksion)\\b",
+          "comment": "fonksion = function"
+        },
+        {
+          "name": "storage.type.class.algi",
+          "match": "\\b(kwouo)\\b",
+          "comment": "kwouo = class"
+        },
+        {
+          "name": "keyword.operator.new.algi",
+          "match": "\\b(feh)\\b",
+          "comment": "feh = new"
+        }
+      ]
+    },
+    "keywords-builtin-functions": {
+      "name": "support.function.builtin.algi",
+      "match": "\\b(tehap|keksie|sanwe|waan|tie|denden|nwagniehwe|ge|ganfa|stegnie)\\b",
+      "comment": "tehap=print, keksie=input, sanwe=eval, waan=sum, tie=subtract, denden=equals, nwagniehwe=sort, ge=typeof, ganfa=open, stegnie=exit"
+    },
+    "keywords-boolean-null": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.algi",
+          "match": "\\b(nene|pok)\\b",
+          "comment": "nene=true, pok=false"
+        },
+        {
+          "name": "constant.language.null.algi",
+          "match": "\\b(n)\\b",
+          "comment": "n = null"
+        }
+      ]
+    },
+    "keywords-logical": {
+      "name": "keyword.operator.logical.algi",
+      "match": "\\b(e|ou|poke)\\b",
+      "comment": "e=and, ou=or, poke=not"
+    },
+    "keywords-operator-word": {
+      "name": "keyword.operator.word.algi",
+      "match": "\\b(est|dans|comme)\\b",
+      "comment": "est=is, dans=in, comme=as"
+    },
+    "keywords-list": {
+      "name": "keyword.other.list.algi",
+      "match": "\\b(bi)\\b",
+      "comment": "bi = mot-clé de liste, ex: bi[1,2,3]"
+    },
+    "keywords-types": {
+      "name": "storage.type.primitive.algi",
+      "match": "\\b(saa|nka'tche|reyel|djanghom)\\b",
+      "comment": "saa=int, nka'tche/reyel=float, djanghom=string"
+    },
+    "operators": {
+      "name": "keyword.operator.algi",
+      "match": "==|!=|<=|>=|<|>|=|\\+|-|\\*|/|%|\\^"
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.definition.parameters.algi",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.definition.block.algi",
+          "match": "[{}]"
+        },
+        {
+          "name": "punctuation.definition.list.algi",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.separator.algi",
+          "match": "[,;:.]"
+        }
+      ]
+    },
+    "function-call": {
+      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()",
+      "captures": {
+        "1": { "name": "entity.name.function.algi" }
+      }
+    },
+    "identifiers": {
+      "name": "variable.other.algi",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+    }
+  }
+}

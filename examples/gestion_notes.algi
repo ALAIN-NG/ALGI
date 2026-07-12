@@ -1,0 +1,159 @@
+// Programme de gestion des notes des etudiants en ALGI
+
+tehap("==========================================")
+tehap("   GESTION DES NOTES DES ETUDIANTS")
+tehap("==========================================")
+tehap("")
+
+// ===== Fonction: calcule la moyenne de 3 notes =====
+fonksion moyenne(n1, n2, n3)
+    tem (n1 + n2 + n3) / 3
+mi
+
+// ===== Fonction: donne la mention selon la moyenne =====
+fonksion mention(m)
+    ke (m >= 16)
+        tem "Tres Bien"
+    mi
+    ke (m >= 14)
+        tem "Bien"
+    mi
+    ke (m >= 12)
+        tem "Assez Bien"
+    mi
+    ke (m >= 10)
+        tem "Passable"
+    mi
+    tem "Ajourne"
+mi
+
+// ===== Fonction: verifie si l'etudiant est admis (moyenne >= 10) =====
+fonksion est_admis(m)
+    ke (m >= 10)
+        tem nene
+    mi
+    tem pok
+mi
+
+// ===== Programme principal =====
+he capacite_max = 30
+
+he nb_etudiants = 0
+tehap("Combien d'etudiants voulez-vous saisir ? (max " + capacite_max + ")")
+keksie(nb_etudiants)
+
+ke (nb_etudiants > capacite_max)
+    tehap("Attention: la capacite maximale est de " + capacite_max + " etudiants")
+mi
+
+// Listes pre-allouees (capacite max)
+he noms = bi["", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", "",
+             "", "", "", "", "", "", "", "", "", ""]
+
+he moyennes = bi[0,0,0,0,0,0,0,0,0,0,
+                 0,0,0,0,0,0,0,0,0,0,
+                 0,0,0,0,0,0,0,0,0,0]
+
+// ===== Saisie des etudiants =====
+he i = 0
+w (i < nb_etudiants)
+    tehap("")
+    tehap("--- Etudiant " + (i + 1) + " ---")
+
+    he nom = ""
+    tehap("Nom de l'etudiant:")
+    keksie(nom)
+
+    he note1 = 0
+    tehap("Note 1 (/20):")
+    keksie(note1)
+
+    he note2 = 0
+    tehap("Note 2 (/20):")
+    keksie(note2)
+
+    he note3 = 0
+    tehap("Note 3 (/20):")
+    keksie(note3)
+
+    he m = moyenne(note1, note2, note3)
+
+    noms[i] = nom
+    moyennes[i] = m
+
+    tehap("Moyenne de " + nom + " : " + m + " - " + mention(m))
+
+    i = i + 1
+mi
+
+// ===== Recapitulatif de la classe =====
+tehap("")
+tehap("==========================================")
+tehap("   RECAPITULATIF DE LA CLASSE")
+tehap("==========================================")
+
+he somme = 0
+he nb_admis = 0
+he j = 0
+
+w (j < nb_etudiants)
+    tehap(noms[j] + " : " + moyennes[j] + "/20 (" + mention(moyennes[j]) + ")")
+
+    somme = somme + moyennes[j]
+
+    ke (est_admis(moyennes[j]))
+        nb_admis = nb_admis + 1
+    mi
+
+    j = j + 1
+mi
+
+he moyenne_classe = somme / nb_etudiants
+
+tehap("")
+tehap("Moyenne generale de la classe : " + moyenne_classe)
+tehap("Etudiants admis : " + nb_admis + " / " + nb_etudiants)
+tehap("Etudiants ajournes : " + (nb_etudiants - nb_admis))
+
+// ===== Classement (tri par selection, du meilleur au moins bon) =====
+tehap("")
+tehap("==========================================")
+tehap("   CLASSEMENT")
+tehap("==========================================")
+
+he a = 0
+w (a < nb_etudiants - 1)
+    he max_index = a
+    he b = a + 1
+
+    w (b < nb_etudiants)
+        ke (moyennes[b] > moyennes[max_index])
+            max_index = b
+        mi
+        b = b + 1
+    mi
+
+    ke (max_index != a)
+        he temp_m = moyennes[a]
+        moyennes[a] = moyennes[max_index]
+        moyennes[max_index] = temp_m
+
+        he temp_n = noms[a]
+        noms[a] = noms[max_index]
+        noms[max_index] = temp_n
+    mi
+
+    a = a + 1
+mi
+
+he rang = 0
+w (rang < nb_etudiants)
+    tehap((rang + 1) + ". " + noms[rang] + " - " + moyennes[rang] + "/20")
+    rang = rang + 1
+mi
+
+tehap("")
+tehap("==========================================")
+tehap("   FIN DU PROGRAMME")
+tehap("==========================================")

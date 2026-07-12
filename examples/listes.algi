@@ -1,0 +1,43 @@
+// Opérations sur les listes
+
+tehap("=== Création de listes ===")
+he fruits = bi["pomme", "banane", "orange", "mangue"]
+tehap("Fruits: " + fruits)
+
+he nombres = bi[10, 20, 30, 40, 50]
+tehap("Nombres: " + nombres)
+
+// Accès aux éléments
+tehap("")
+tehap("=== Accès aux éléments ===")
+tehap("Premier fruit: " + fruits[0])
+tehap("Deuxième fruit: " + fruits[1])
+tehap("Dernier nombre: " + nombres[4])
+
+// Modification
+tehap("")
+tehap("=== Modification ===")
+fruits[1] = "ananas"
+tehap("Fruits modifiés: " + fruits)
+
+// Ajout d'éléments
+tehap("")
+tehap("=== Ajout d'éléments ===")
+he scores = bi[]
+tehap("Scores: " + scores)
+// Ajout manuel (selon la syntaxe ALGI)
+
+// Parcours de liste
+tehap("")
+tehap("=== Parcours ===")
+pou (fruit dans fruits)
+    tehap("J'aime les " + fruit)
+mi
+
+// Opérations sur les listes
+tehap("")
+tehap("=== Opérations ===")
+he nombres2 = bi[5, 3, 8, 1, 9, 2]
+tehap("Avant tri: " + nombres2)
+he tries = nwagniehwe(nombres2)
+tehap("Après tri: " + tries)

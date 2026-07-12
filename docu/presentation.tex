@@ -1,0 +1,828 @@
+\documentclass[10pt]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% ===== PACKAGES =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{bbm}
+\usepackage{pgfplots}
+\usepackage{fontawesome5}
+
+% ===== COULEURS =====
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{algiblue}{RGB}{0,102,204}
+\definecolor{algigold}{RGB}{204,153,0}
+\definecolor{algired}{RGB}{204,0,0}
+
+% ===== STYLE DU CODE =====
+\lstdefinestyle{algi-style}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codepurple}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{algired},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{codegray},
+    language=C,
+    morekeywords={he, ke, kommenu, mi, w, pou, fonksion, kwouo, feh, 
+                  tem, peu, tela, tatem, tehap, keksie, sanwe, waan,
+                  tie, denden, nwagniehwe, ge, ganfa, stegnie, nene,
+                  pok, n, e, ou, poke, est, dans, comme, bi, saa,
+                  reyel, nka'tche, djanghom, algi_throw, algi_push_try,
+                  algi_pop_try, algi_setjmp_try, algi_get_last_error},
+    morecomment=[l]{//},
+    morestring=[b]"
+}
+\setbeamertemplate{navigation symbols}{}
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{orange},
+    literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+    {À}{{\`A}}1 {È}{{\`E}}1 {Ì}{{\'I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+    {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+    {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+    {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+    {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+    {ç}{{\c c}}1 {Ç}{{\c C}}1
+    {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1
+    {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1
+    {°}{{\textdegree}}1 {²}{{\textsuperscript{2}}}1
+}
+
+% ===== INFORMATIONS =====
+\title[ALGI]{ALGI\\Langage de Programmation en Langue Balengou}
+\subtitle{Travaux Pratiques de Compilation - Master 1 Informatique}
+\author[DJOMO ALAIN]{\textbf{NGUEUDJANG DJOMO ALAIN GILDAS - 22W2183}}
+\institute[UY1]{\textbf{Université de Yaoundé I\\Faculté des Sciences\\Département d'Informatique}}
+\date{\today}
+
+% ===== DÉBUT =====
+\begin{document}
+
+% ===== PAGE DE TITRE =====
+\begin{frame}
+    \titlepage
+    \begin{center}
+        \textbf{Superviseur: Dr. THOMAS MESSI NGUELE}
+    \end{center}
+\end{frame}
+
+% ===== SOMMAIRE =====
+\begin{frame}{Plan de la Présentation}
+    \centering
+    \tableofcontents
+\end{frame}
+
+% ========================================
+% SECTION 1: INTRODUCTION
+% ========================================
+\section{Introduction}
+
+% ----- Contexte -----
+\begin{frame}{Contexte et Motivation}
+    \begin{block}{Objectifs}
+        \begin{itemize}
+            \item Créer un langage de programmation avec des mots-clés inspirés de la langue \textbf{balengou}
+            \item Valoriser et documenter un corpus lexical d'une langue camerounaise
+            \item Démonstration de la faisabilité d'un langage formel construit sur une langue africaine
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Problématique}
+        \begin{itemize}
+            \item Comment concevoir un compilateur complet pour un langage de programmation ?
+            \item Quels sont les étapes et outils nécessaires ?
+            \item Comment intégrer une dimension culturelle dans un projet technique ?
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Pourquoi ALGI ? -----
+\begin{frame}{Pourquoi ALGI ?}
+    \begin{columns}[T]
+        \column{0.47\textwidth}
+        \begin{block}{Dimension Technique}
+            \begin{itemize}
+                \item Apprentissage des techniques de compilation
+                \item Maîtrise des outils (Flex, Bison, GCC)
+                \item Génération de code (C et Assembleur)
+            \end{itemize}
+        \end{block}
+        
+        \column{0.47\textwidth}
+        \begin{block}{Dimension Culturelle}
+            \begin{itemize}
+                \item Valorisation des langues locales
+                \item Accessibilité à la programmation
+                \item Identité et diversité culturelle
+            \end{itemize}
+        \end{block}
+    \end{columns}
+    
+    \begin{alertblock}{Signification}
+        \textbf{ALGI} = \textit{Alain gildas} (inspiré de la langue balengou)
+    \end{alertblock}
+\end{frame}
+
+% ----- Architecture Globale -----
+\begin{frame}{Architecture Globale du Compilateur}
+    \begin{center}
+        \begin{tikzpicture}[node distance=1.2cm, auto]
+            \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+                                 text width=10em, text centered, rounded corners, 
+                                 minimum height=3em]
+            \tikzstyle{arrow} = [thick,->,>=stealth]
+            
+            \node (source) [block] {Source ALGI\\*.algi};
+            \node (lex) [block, below of=source] {Analyseur\\Lexical (Flex)};
+            \node (syn) [block, below of=lex] {Analyseur\\Syntaxique (Bison)};
+            \node (ast) [block, below of=syn] {AST +\\Table Symboles};
+            \node (codegen) [block, below of=ast] {Générateur\\de Code};
+            \node (c) [block, left of=codegen, xshift=-3cm] {Code C\\*.c};
+            \node (asm) [block, right of=codegen, xshift=3cm] {Assembleur\\*.asm};
+            \node (exec) [block, below of=c, xshift=4cm] {Exécutable};
+            
+            \draw [arrow] (source) -- (lex);
+            \draw [arrow] (lex) -- (syn);
+            \draw [arrow] (syn) -- (ast);
+            \draw [arrow] (ast) -- (codegen);
+            \draw [arrow] (codegen) -- (c);
+            \draw [arrow] (codegen) -- (asm);
+            \draw [arrow] (c) -- (exec);
+            \draw [arrow] (asm) -- (exec);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+% ========================================
+% SECTION 2: ANALYSE LEXICALE
+% ========================================
+\section{Analyse Lexicale}
+
+% ----- Présentation du Lexer -----
+\begin{frame}{Analyseur Lexical (Flex)}
+    \begin{block}{Rôle}
+        \begin{itemize}
+            \item Reconnaître les tokens (mots-clés, identifiants, nombres, etc.)
+            \item Ignorer les commentaires et espaces
+            \item Gérer les erreurs lexicales
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Caractéristiques}
+        \begin{itemize}
+            \item 34 mots-clés en bamiléké
+            \item Expressions régulières pour les tokens
+            \item Gestion des chaînes de caractères
+            \item Comptage des lignes et colonnes
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Exemple de Lexer -----
+\begin{frame}[fragile]{Exemple du Lexer}
+    \begin{lstlisting}[style=algi-style, caption={Extrait de algi.l}]
+// Mots-clés en bamiléké
+"ke"            { return KEYWORD_IF; }
+"kommenu"       { return KEYWORD_ELSE; }
+"w"             { return KEYWORD_WHILE; }
+"pou"           { return KEYWORD_FOR; }
+"mi"            { return KEYWORD_END; }
+"he"            { return KEYWORD_LET; }
+"fonksion"      { return KEYWORD_FUNCTION; }
+"kwouo"         { return KEYWORD_CLASS; }
+"feh"           { return KEYWORD_NEW; }
+
+// Expressions régulières
+{INTEGER}       { yylval.number = atof(yytext); return NUMBER; }
+{FLOAT}         { yylval.number = atof(yytext); return NUMBER; }
+{IDENTIFIER}    { yylval.identifier = strdup(yytext); return IDENTIFIER; }
+\end{lstlisting}
+\end{frame}
+
+% ----- Table des Mots-clés -----
+\begin{frame}{Table des Mots-Clés ALGI}
+    \begin{table}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \textbf{ALGI} & \textbf{Français} & \textbf{ALGI} & \textbf{Français} & \textbf{ALGI} & \textbf{Français}\\
+            \hline
+            ke & si & kommenu & sinon & pok & faux \\
+            w & tant que & pou & pour & n & nul \\
+            mi & fin & he & déclaration & e & et \\
+            fonksion & fonction & kwouo & classe & ou & ou \\
+            feh & nouveau & tem & retour & poke & non \\
+            peu & casser & tela & essayer & est & est \\
+            tatem & attraper & tehap & afficher & dans & dans \\
+            keksie & lire & sanwe & évaluer & comme & comme\\
+            waan & somme & tie & soustraire & bi & liste \\
+            denden & égal & nwagniehwe & trier & saa & entier \\
+            ge & typeof & ganfa & ouvrir & reyel & réel \\
+            stegnie & exit & nene & vrai & djanghom & chaîne \\   
+            \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+% ========================================
+% SECTION 3: ANALYSE SYNTAXIQUE
+% ========================================
+\section{Analyse Syntaxique}
+
+% ----- Présentation du Parser -----
+\begin{frame}{Analyseur Syntaxique (Bison)}
+    \begin{block}{Rôle}
+        \begin{itemize}
+            \item Vérifier la grammaire du langage
+            \item Construire l'AST (Arbre Syntaxique Abstrait)
+            \item Gérer les erreurs syntaxiques
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Grammaire ALGI}
+        \begin{itemize}
+            \item 50+ règles de production
+            \item Gestion des opérateurs et priorité
+            \item Support des structures de contrôle
+            \item Support des fonctions et classes
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Exemple de Grammaire -----
+\begin{frame}[fragile]{Exemple de la Grammaire}
+    \begin{lstlisting}[style=algi-style, caption={Extrait de algi.y}]
+// Structures de contrôle
+if_statement
+    : KEYWORD_IF '(' expression ')' block KEYWORD_END {
+        $$ = create_if($3, $5, NULL);
+    }
+    | KEYWORD_IF '(' expression ')' block KEYWORD_ELSE block KEYWORD_END {
+        $$ = create_if($3, $5, $7);
+    }
+    ;
+// Boucles
+while_loop
+    : KEYWORD_WHILE '(' expression ')' block KEYWORD_END {
+        $$ = create_while($3, $5);
+    }
+    ;
+for_loop
+    : KEYWORD_FOR '(' IDENTIFIER OPERATOR_IN expression ')' block KEYWORD_END {
+        $$ = create_for($3, $5, $7);
+    }
+    ;
+\end{lstlisting}
+\end{frame}
+
+% ----- AST -----
+\begin{frame}{Arbre Syntaxique Abstrait (AST)}
+    \begin{block}{Nœuds Principaux}
+        \begin{itemize}
+            \item \textbf{NODE\_PROGRAM} : Programme principal
+            \item \textbf{NODE\_FUNCTION} : Définition de fonction
+            \item \textbf{NODE\_IF} / \textbf{NODE\_WHILE} / \textbf{NODE\_FOR} : Structures
+            \item \textbf{NODE\_BINARY\_OP} / \textbf{NODE\_UNARY\_OP} : Opérateurs
+            \item \textbf{NODE\_LIST} / \textbf{NODE\_CALL} : Listes et appels
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Exemple d'AST pour \texttt{a = b + c * 2}}
+        \begin{center}
+            \begin{tikzpicture}[level distance=1cm, sibling distance=3cm]
+                \tikzstyle{node}=[rectangle, draw, fill=blue!10, rounded corners]
+                \node {ASSIGNMENT}
+                child {node {IDENTIFIER: a}}
+                child {node {ADD}
+                    child {node {IDENTIFIER: b}}
+                    child {node {MUL}
+                        child {node {IDENTIFIER: c}}
+                        child {node {NUMBER: 2}}
+                    }
+                };
+            \end{tikzpicture}
+        \end{center}
+    \end{block}
+\end{frame}
+
+% ========================================
+% SECTION 4: TABLE DES SYMBOLES
+% ========================================
+\section{Table des Symboles}
+
+% ----- Présentation -----
+\begin{frame}{Table des Symboles}
+    \begin{block}{Rôle}
+        \begin{itemize}
+            \item Stocker les informations sur les identifiants
+            \item Gérer les portées (scopes)
+            \item Vérifier les déclarations
+            \item Support des types
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Informations Stockées}
+        \begin{itemize}
+            \item Nom du symbole
+            \item Type (variable, fonction, classe, paramètre, champ, méthode)
+            \item Type de données (int, float, string, bool, list, object)
+            \item Niveau de portée
+            \item Mutabilité
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Structure -----
+\begin{frame}[fragile]{Structure de la Table des Symboles}
+    \begin{lstlisting}[style=algi-style, caption={symbol.h}]
+typedef struct Symbol {
+    char* name;
+    SymbolKind kind;
+    DataType data_type;
+    int scope_level;
+    int is_mutable;
+    struct Symbol* next;
+} Symbol;
+
+typedef struct SymbolTable {
+    Symbol** symbols;
+    int count;
+    int capacity;
+    int scope_level;
+    struct SymbolTable* parent;
+} SymbolTable;
+\end{lstlisting}
+\end{frame}
+
+% ========================================
+% SECTION 5: GÉNÉRATION DE CODE
+% ========================================
+\section{Génération de Code}
+
+% ----- Génération C -----
+\begin{frame}{Génération de Code C}
+    \begin{block}{Caractéristiques}
+        \begin{itemize}
+            \item Génération de code C portable
+            \item Utilisation du runtime \texttt{AlgiValue*}
+            \item Support complet des fonctionnalités ALGI
+            \item Gestion dynamique des types
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Runtime}
+        \begin{itemize}
+            \item Types dynamiques (INT, FLOAT, STRING, BOOL, LIST, OBJECT)
+            \item Fonctions d'opérations arithmétiques
+            \item Gestion des exceptions (setjmp/longjmp)
+            \item Fonctions natives (print, input, sum, sort, etc.)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Exemple de Code Généré -----
+\begin{frame}[fragile]{Exemple de Code C Généré}
+    \begin{lstlisting}[style=algi-style, caption={Code ALGI}]
+he x = 10
+he y = 20
+tehap(x + y)
+\end{lstlisting}
+    \begin{lstlisting}[style=algi-style, caption={Code C Généré}]
+#include <stdio.h>
+#include "runtime.h"
+
+int main(void) {
+    AlgiValue* x = algi_make_int(10);
+    AlgiValue* y = algi_make_int(20);
+    algi_print(algi_add(x, y));
+    return 0;
+}
+\end{lstlisting}
+\end{frame}
+
+% ----- Génération ASM -----
+\begin{frame}{Génération de Code Assembleur x86}
+    \begin{block}{Caractéristiques}
+        \begin{itemize}
+            \item Génération de code x86 32 bits
+            \item Utilisation de NASM
+            \item Pédagogique : montre le fonctionnement bas niveau
+            \item Support des entiers, boucles, conditions
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Limitations}
+        \begin{itemize}
+            \item Pas de support des chaînes dynamiques
+            \item Pas de flottants
+            \item Pas de listes/objets
+            \item Générateur simplifié pour l'apprentissage
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Exemple ASM -----
+\begin{frame}[fragile]{Exemple de Code Assembleur Généré}
+    \begin{lstlisting}[style=algi-style]
+        
+he a = 5
+he b = 3
+tehap(a + b)
+\end{lstlisting}
+    \begin{columns}[T]
+        \column{0.45\textwidth}
+\begin{block}{code asm partie 1}
+    \begin{lstlisting}[style=algi-style]
+section .data
+  format_int db "%d", 10, 0
+section .text
+  global _start
+_start:
+  push ebp
+  mov ebp, esp
+  sub esp, 8
+  ; a = 5
+  mov eax, 5
+  mov [ebp-4], eax
+  ; b = 3
+  mov eax, 3
+\end{lstlisting}
+\end{block}
+\column{0.45\textwidth}
+\begin{block}{code asm partie 2}
+    \begin{lstlisting}[style=algi-style]
+  mov [ebp-8], eax
+  ; a + b
+  mov eax, [ebp-4]
+  add eax, [ebp-8]
+  ; affichage
+  push eax
+  push format_int
+  call printf
+  add esp, 8
+  mov esp, ebp
+  pop ebp
+  ret
+\end{lstlisting}
+\end{block}
+\end{columns}
+\end{frame}
+
+% ========================================
+% SECTION 6: RUNTIME
+% ========================================
+\section{Runtime}
+
+% ----- Présentation -----
+\begin{frame}{Runtime ALGI}
+    \begin{block}{Composants Principaux}
+        \begin{itemize}
+            \item \textbf{AlgiValue} : Structure de données dynamique
+            \item \textbf{AlgiList} : Liste chaînée dynamique
+            \item \textbf{AlgiObject} : Objet avec champs
+            \item \textbf{Gestion des exceptions} : setjmp/longjmp
+            \item \textbf{Fonctions natives} : print, input, sum, etc.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- AlgiValue -----
+\begin{frame}[fragile]{Structure AlgiValue}
+    \begin{lstlisting}[style=algi-style, caption={runtime.h}]
+typedef enum {
+    TYPE_INT = 1,
+    TYPE_FLOAT = 2,
+    TYPE_STRING = 3,
+    TYPE_BOOL = 4,
+    TYPE_LIST = 5,
+    TYPE_OBJECT = 6,
+    TYPE_VOID = 7,
+    TYPE_NULL = 8,
+    TYPE_ERROR = 9
+} AlgiType;
+
+typedef struct {
+    AlgiType type;
+    union {
+        long int_value;
+        double float_value;
+        bool bool_value;
+        char* string_value;
+        void* ptr_value;
+    } value;
+} AlgiValue;
+\end{lstlisting}
+\end{frame}
+
+% ----- Fonctions du Runtime -----
+\begin{frame}[fragile]{Fonctions du Runtime}
+    \begin{lstlisting}[style=algi-style, caption={Exemples de fonctions}]
+// Création
+AlgiValue* algi_make_int(long value);
+AlgiValue* algi_make_string(const char* value);
+AlgiValue* algi_make_list(AlgiList* list);
+
+// Opérations
+AlgiValue* algi_add(AlgiValue* a, AlgiValue* b);
+AlgiValue* algi_sub(AlgiValue* a, AlgiValue* b);
+AlgiValue* algi_equals(AlgiValue* a, AlgiValue* b);
+
+// Gestion des erreurs
+void algi_throw(const char* error_message);
+void algi_push_try(void);
+int algi_setjmp_try(void);
+char* algi_get_last_error(void);
+\end{lstlisting}
+\end{frame}
+
+% ========================================
+% SECTION 7: EXEMPLES
+% ========================================
+\section{Exemples}
+
+% ----- Bonjour -----
+\begin{frame}[fragile]{Exemple 1: Bonjour le Monde}
+    \begin{lstlisting}[style=algi-style, caption={bonjour.algi}]
+// Bonjour le monde en ALGI
+tehap("Bonjour le monde!")
+tehap("Bienvenue dans ALGI!")
+
+he message = "ALGI est un langage bamiléké"
+tehap(message)
+
+// Affichage d'une variable
+he nom = "Alain"
+tehap("Bonjour " + nom + "!")
+\end{lstlisting}
+    \begin{lstlisting}[style=algi-style, caption={Résultat}]
+Bonjour le monde!
+Bienvenue dans ALGI!
+ALGI est un langage bamiléké
+Bonjour Alain!
+\end{lstlisting}
+\end{frame}
+
+% ----- Calculatrice -----
+\begin{frame}[fragile]{Exemple 2: Calculatrice Simple}
+    \begin{lstlisting}[style=algi-style, caption={calculatrice.algi}]
+tehap("=== Calculatrice ALGI ===")
+
+tehap("Entrez le premier nombre:")
+he a = keksie()
+
+tehap("Entrez le deuxième nombre:")
+he b = keksie()
+
+tehap(a + " + " + b + " = " + (a + b))
+tehap(a + " - " + b + " = " + (a - b))
+tehap(a + " * " + b + " = " + (a * b))
+
+ke (b != 0)
+    tehap(a + " / " + b + " = " + (a / b))
+kommenu
+    tehap("Division par zéro impossible!")
+mi
+\end{lstlisting}
+\end{frame}
+
+% ----- Tri -----
+\begin{frame}[fragile]{Exemple 3: Tri par Insertion}
+    \begin{lstlisting}[style=algi-style, caption={triinsertion.algi}]
+fonksion triinsertion(liste)
+    he n = liste
+    he i = 1 
+    w (i < n)
+        he element = n[i]
+        he j = i - 1       
+        w (j >= 0 e n[j] > element)
+            n[j + 1] = n[j]
+            j = j - 1
+        mi  
+        n[j + 1] = element
+        i = i + 1
+    mi 
+    tem n
+mi
+
+he nombres = bi[5, 2, 8, 1, 3]
+tehap("Liste originale: " + nombres)
+he tries = triinsertion(nombres)
+tehap("Liste triée: " + tries)
+\end{lstlisting}
+\end{frame}
+
+% ========================================
+% SECTION 8: COMPILATION
+% ========================================
+\section{Compilation et Utilisation}
+
+% ----- Installation -----
+\begin{frame}{Installation}
+    \begin{block}{Prérequis}
+        \begin{itemize}
+            \item GCC (ou Clang)
+            \item Flex
+            \item Bison
+            \item Make
+            \item NASM (pour le mode assembleur)
+        \end{itemize}
+    \end{block}
+
+% ----- Makefile -----
+        \begin{table}
+            \begin{tabular}{|c|c|}
+                \hline
+                \textbf{Commande} & \textbf{Description} \\
+                \hline
+                \texttt{make} & Compiler le compilateur \\
+                \texttt{make clean} & Nettoyer les fichiers \\
+                \texttt{make clean-all} & Nettoyage complet \\
+                \texttt{make run-c} & Compiler C et exécuter \\
+                \texttt{make run-asm} & Compiler ASM et exécuter \\
+                \texttt{make test-all} & Exécuter tous les tests \\
+                \texttt{make install} & Installer le compilateur \\
+                \texttt{make help} & Afficher l'aide \\
+                \hline
+            \end{tabular}
+        \end{table}
+\end{frame}
+
+% ========================================
+% SECTION 9: TESTS
+% ========================================
+\section{Tests et Qualité}
+
+% ----- Tests -----
+\begin{frame}{Stratégie de Tests}
+    \begin{block}{Types de Tests}
+        \begin{itemize}
+            \item \textbf{Unitaires} : Chaque module testé individuellement
+            \item \textbf{Intégration} : Interaction entre les modules
+            \item \textbf{Fonctionnels} : Programmes ALGI complets
+            \item \textbf{Régression} : Non-régression après modifications
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Exemples de Tests}
+        \begin{itemize}
+            \item \texttt{bonjour.algi} : Base
+            \item \texttt{variables.algi} : Variables et types
+            \item \texttt{calculatrice.algi} : Opérations
+            \item \texttt{boucles.algi} : Structures de contrôle
+            \item \texttt{fonctions.algi} : Fonctions
+            \item \texttt{listes.algi} : Listes
+            \item \texttt{exceptions.algi} : Gestion d'erreurs
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+
+% ========================================
+% SECTION 10: CONCLUSION
+% ========================================
+\section{Conclusion}
+
+% ----- Réalisations -----
+\begin{frame}{Réalisations}
+    \begin{block}{Fonctionnalités Implémentées}
+        \begin{itemize}
+            \item \textbf{Lexer} : 34 mots-clés en bamiléké
+            \item \textbf{Parser} : 50+ règles de production
+            \item \textbf{AST} : 20+ types de nœuds
+            \item \textbf{Table des symboles} : Gestion des portées
+            \item \textbf{Générateur C} : Code portable et complet
+            \item \textbf{Générateur ASM} : Code x86 pédagogique
+            \item \textbf{Runtime} : Types dynamiques et exceptions
+            \item \textbf{Tests} : 25+ programmes de test
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Défis -----
+\begin{frame}{Défis Rencontrés}
+    \begin{block}{Défis Techniques}
+        \begin{itemize}
+            \item Cohérence entre AST et générateur de code
+            \item Gestion des types dynamiques en C
+            \item Génération de code assembleur correct
+            \item Gestion des exceptions avec setjmp/longjmp
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Bugs Critiques Corrigés}
+        \begin{itemize}
+            \item \texttt{keksie()} : Type de retour incorrect
+            \item \texttt{est} : Comparaison de type vs valeur
+            \item Fonctions : Paramètres perdus
+            \item \texttt{bi[...]} : Éléments de liste perdus
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Perspectives -----
+\begin{frame}{Perspectives}
+    \begin{block}{Améliorations Futures}
+        \begin{itemize}
+            \item Optimisation du code généré
+            \item Support des types de données avancés
+            \item Compilation JIT (Just-In-Time)
+            \item Environnement de développement intégré (IDE)
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Extensions Possibles}
+        \begin{itemize}
+            \item Bibliothèque standard ALGI
+            \item Support des structures de données avancées
+            \item Programmation orientée objet complète
+            \item Interopérabilité avec C et Python
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+% ----- Remerciements -----
+\begin{frame}{Remerciements}
+    \begin{center}
+        \Huge{\textbf{Merci !}}
+        
+        \vspace{1cm}
+        \Large{Questions ?}
+        
+        \vspace{1cm}
+        \normalsize{
+            \textbf{Auteur} : NGUEUDJANG DJOMO ALAIN GILDAS\\
+            \textbf{Email} : gildas.ngueudjang@facsciences-uy1.cm\\
+            \textbf{GitHub} : github.com/ALAIN-NG/ALGI
+        }
+        
+        \vspace{0.5cm}
+        \small{
+            \textit{Ce projet a été réalisé dans le cadre du Master 1 en Informatique}\\
+            \textit{à l'Université de Yaoundé I, Cameroun}
+        }
+    \end{center}
+\end{frame}
+
+% ========================================
+% ANNEXES
+% ========================================
+\section*{Annexes}
+\begin{frame}[allowframebreaks]{Références}
+    \begin{thebibliography}{9}
+        \bibitem{flex} \textbf{Flex}: \\
+        \url{https://github.com/westes/flex}
+        
+        \bibitem{bison} \textbf{Bison}: \\
+        \url{https://www.gnu.org/software/bison/}
+        
+        \bibitem{dragon} \textbf{Aho, A.V., Lam, M.S., Sethi, R., Ullman, J.D.} (2007): \\
+        \textit{Compilers: Principles, Techniques, and Tools}. Addison-Wesley.
+        
+        \bibitem{nasm} \textbf{NASM}: \\
+        \url{https://www.nasm.us/}
+        
+        \bibitem{algi} \textbf{Projet ALGI}: \\
+        \url{https://github.com/ALAIN-NG/ALGI}
+    \end{thebibliography}
+\end{frame}
+
+% ===== FIN =====
+\end{document}

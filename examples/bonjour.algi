@@ -1,0 +1,9 @@
+// Programme simple de démonstration
+
+tehap("Bonjour le monde!")
+tehap("Bienvenue dans ALGI, le langage Bamiléké!")
+
+he nom = ""
+tehap("Entrez votre nom")
+keksie(nom)
+tehap("Bonjour " + nom)

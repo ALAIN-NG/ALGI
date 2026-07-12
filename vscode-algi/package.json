@@ -1,0 +1,54 @@
+{
+  "name": "algi-language",
+  "displayName": "ALGI Language Support",
+  "description": "Coloration syntaxique et icônes de fichiers pour le langage ALGI (compilateur quantique Bamiléké de QuantL)",
+  "version": "0.1.0",
+  "publisher": "quantl",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Themes"
+  ],
+  "keywords": [
+    "algi",
+    "bamileke",
+    "quantl",
+    "syntax highlighting",
+    "file icons"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "algi",
+        "aliases": [
+          "ALGI",
+          "algi"
+        ],
+        "extensions": [
+          ".algi"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/algi-file-icon.svg",
+          "dark": "./icons/algi-file-icon.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "algi",
+        "scopeName": "source.algi",
+        "path": "./syntaxes/algi.tmLanguage.json"
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "algi-icon-theme",
+        "label": "ALGI Icons",
+        "path": "./icons/algi-icon-theme.json"
+      }
+    ]
+  }
+}

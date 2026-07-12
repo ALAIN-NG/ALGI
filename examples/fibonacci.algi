@@ -1,0 +1,25 @@
+// Suite de Fibonacci
+
+tehap("=== SUITE DE FIBONACCI ===")
+
+fonksion fibonacci(nbr)
+    ke (nbr <= 1)
+        tem nbr
+    kommenu
+        tem fibonacci(nbr - 1) + fibonacci(nbr - 2)
+    mi
+mi
+
+he nb = 0
+tehap("Entrez le nombre de terme : ")
+
+keksie(nb)
+
+he i = 0
+w (i < nb)
+    he val = fibonacci(i)
+    tehap("F(" + i + ") = " + val)
+    i = i + 1
+mi
+
+tehap("=== FIN ===")

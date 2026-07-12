@@ -1,0 +1,109 @@
+// L'utilisateur entre des nombres, le programme les trie
+
+tehap("==========================================")
+tehap("   TRI PAR SÉLECTION (SELECTION SORT)")
+tehap("==========================================")
+tehap("")
+
+// Fonction pour trier une liste par sélection
+fonksion tri_selection(liste, nd)
+    he nb = liste
+    he taille = nb
+    he i = 0
+    
+    // Parcourir tous les éléments
+    w (i < nd - 1)
+        // Trouver l'index du minimum
+        he min_index = i
+        he j = i + 1
+        
+        w (j < nd)
+            ke (nb[j] < nb[min_index])
+                min_index = j
+            mi
+            j = j + 1
+        mi
+        
+        // Échanger les éléments
+        ke (min_index != i)
+            he temp = nb[i]
+            nb[i] = nb[min_index]
+            nb[min_index] = temp
+        mi
+        
+        i = i + 1
+    mi
+    
+    tem nb
+mi
+
+// Fonction pour afficher une liste
+fonksion afficher_liste(liste, nd)
+    he i = 0
+    
+    w (i < nd)
+        tehap(liste[i])
+        i = i + 1
+    mi
+    
+    tem 0
+mi
+
+// Programme principal
+he nb = 0
+tehap("Entrez le nombre d'éléments à trier:")
+
+keksie(nb)
+
+// Vérifier que nb est valide
+ke (nb <= 0)
+    tehap("❌ Erreur: Le nombre d'éléments doit être positif!")
+mi
+
+ke (nb > 100)
+    tehap("⚠️ Attention: Vous allez entrer " + nb + " nombres")
+    tehap("   (limite recommandée: 100)")
+mi
+
+// Créer une liste vide
+he nombres = bi[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+// Saisie des éléments
+tehap("")
+tehap("Entrez " + nb + " nombres:")
+
+he i = 0
+he valeur = 0
+w (i <= nb)
+    tehap("Nombre " + i + ":")
+    keksie(valeur)
+    nombres[i] = valeur  // Ajout à la liste
+    i = i + 1
+mi
+tehap(nombres[0])
+// Afficher la liste non triée
+tehap("")
+tehap("📋 Liste non triée:")
+he sd = afficher_liste(nombres, nb)
+
+// Trier
+tehap("")
+tehap("🔄 Tri en cours...")
+he liste_triee = tri_selection(nombres, nb)
+
+// Afficher la liste triée
+tehap("")
+tehap("✅ Liste triée (ordre croissant):")
+sd = afficher_liste(liste_triee, nb)
+
+// Afficher des statistiques
+tehap("")
+tehap("📊 Statistiques:")
+tehap("   Nombre d'éléments: " + nb)
+tehap("   Premier élément: " + liste_triee[0])
+tehap("   Dernier élément: " + liste_triee[nb - 1])
+
+tehap("")
+tehap("==========================================")
+tehap("   FIN DU PROGRAMME")
+tehap("==========================================")

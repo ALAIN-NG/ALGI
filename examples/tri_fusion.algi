@@ -1,0 +1,129 @@
+// Programme de tri fusion (merge sort) en ALGI
+
+tehap("==========================================")
+tehap("   TRI FUSION (MERGE SORT)")
+tehap("==========================================")
+tehap("")
+
+// ===== Fonction: fusionne deux tableaux tries =====
+fonksion fusionner(tab, gauche, milieu, droit)
+    he i = gauche
+    he j = milieu + 1
+    he k = 0
+    he capacite = droit - gauche + 1
+    he temp = bi[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    
+    w (i <= milieu e j <= droit)
+        ke (tab[i] <= tab[j])
+            temp[k] = tab[i]
+            i = i + 1
+        kommenu
+            temp[k] = tab[j]
+            j = j + 1
+        mi
+        k = k + 1
+    mi
+    
+    w (i <= milieu)
+        temp[k] = tab[i]
+        i = i + 1
+        k = k + 1
+    mi
+    
+    w (j <= droit)
+        temp[k] = tab[j]
+        j = j + 1
+        k = k + 1
+    mi
+    
+    he idx = 0
+    w (idx < capacite)
+        tab[gauche + idx] = temp[idx]
+        idx = idx + 1
+    mi
+    tem nene
+mi
+
+// ===== Fonction: tri fusion recursif =====
+fonksion tri_fusion_rec(tab, gauche, droit)
+    he a = 0
+    he b = 0
+    ke (gauche < droit)
+        he milieu = (gauche + droit) / 2
+        a = tri_fusion_rec(tab, gauche, milieu)
+        he mil = milieu + 1
+        a = tri_fusion_rec(tab, mil, droit)
+        b = fusionner(tab, gauche, milieu, droit)
+    mi
+    tem nene
+mi
+
+// ===== Fonction: lance le tri fusion =====
+fonksion tri_fusion(tab, taille)
+    he a =tri_fusion_rec(tab, 0, taille - 1)
+    tem nene
+mi
+
+// ===== Fonction: affiche le tableau =====
+fonksion afficher_tableau(tab, taille)
+    he idx = 0
+    tehap("Tableau: ["+ "")
+    w (idx < taille)
+        ke (idx < taille - 1)
+            tehap(tab[idx] + ", " + "")
+        kommenu
+            tehap(tab[idx] + "")
+        mi
+        idx = idx + 1
+    mi
+    tehap("]")
+    tem nene
+mi
+
+// ===== Programme principal =====
+he taillemax = 20
+
+tehap("Combien de nombres voulez-vous trier ? (max " + taillemax + ")")
+he taille = 0
+keksie(taille)
+
+ke (taille > taillemax)
+    tehap("Attention: la capacite maximale est de " + taillemax)
+    taille = taillemax
+mi
+
+// Tableau pre-alloue
+he nombres = bi[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+// ===== Saisie des nombres =====
+tehap("")
+tehap("Entrez les nombres a trier:")
+
+he i = 0
+he val = 0
+w (i < taille)
+    tehap("Nombre " + (i + 1) + ":")
+    keksie(val)
+    nombres[i] = val
+    i = i + 1
+mi
+
+// Affichage avant tri
+tehap("")
+tehap("--- Avant le tri ---")
+he bn = afficher_tableau(nombres, taille)
+
+// Tri fusion
+tehap("")
+tehap("Tri en cours...")
+he ad = tri_fusion(nombres, taille)
+
+// Affichage apres tri
+tehap("")
+tehap("--- Apres le tri (ordre croissant) ---")
+he at = afficher_tableau(nombres, taille)
+
+tehap("")
+tehap("==========================================")
+tehap("   TRI FUSION TERMINE")
+tehap("==========================================")

@@ -1,0 +1,71 @@
+// Calculatrice interactive en ALGI.
+
+// ===== Fonction de calcul =====
+fonksion operer(a, b, op)
+    ke (op == "+")
+        tem a + b
+    mi
+
+    ke (op == "-")
+        tem a - b
+    mi
+
+    ke (op == "*")
+        tem a * b
+    mi
+
+    ke (op == "/")
+        ke (b == 0)
+            tehap("Erreur: division par zero impossible")
+            tem n
+        mi
+        tem a / b
+    mi
+
+    ke (op == "%")
+        ke (b == 0)
+            tehap("Erreur: modulo par zero impossible")
+            tem n
+        mi
+        tem a % b
+    mi
+
+    tehap("Operation inconnue: " + op)
+    tem n
+mi
+
+// ===== Programme principal =====
+he continuer = nene
+he a = 0
+he b = 0
+he op = ""
+he resultat = 0
+he encore = ""
+
+tehap("=== Calculatrice ALGI ===")
+
+w (continuer)
+    tehap("------------------------")
+
+    tehap("Premier nombre :")
+    keksie(a)
+
+    tehap("Operation (+ - * / %) :")
+    keksie(op)
+
+    tehap("Second nombre :")
+    keksie(b)
+
+    resultat = operer(a, b, op)
+
+    tehap(a + " " + op + " " + b + " = " + resultat)
+
+    tehap("Encore un calcul ? (o/n)")
+    keksie(encore)
+
+    ke (encore == "n")
+        continuer = pok
+    mi
+mi
+
+tehap("=== Fin de la calculatrice ===")

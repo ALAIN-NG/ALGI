@@ -1,0 +1,26 @@
+{
+  "iconDefinitions": {
+    "_file": {
+      "iconPath": "./default-file-icon.svg"
+    },
+    "_folder": {
+      "iconPath": "./default-folder-icon.svg"
+    },
+    "_folder_open": {
+      "iconPath": "./default-folder-open-icon.svg"
+    },
+    "algi_file": {
+      "iconPath": "./algi-file-icon.svg"
+    }
+  },
+  "file": "_file",
+  "folder": "_folder",
+  "folderExpanded": "_folder_open",
+  "fileExtensions": {
+    "algi": "algi_file"
+  },
+  "fileNames": {},
+  "languageIds": {
+    "algi": "algi_file"
+  }
+}

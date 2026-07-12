@@ -1,0 +1,168 @@
+#!/bin/bash
+# Script de test automatique pour ALGI
+# Exécute tous les tests et vérifie les résultats
+
+set -e
+
+# Couleurs
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+error() { echo -e "${RED}❌ $*${NC}" >&2; }
+success() { echo -e "${GREEN}✅ $*${NC}"; }
+info() { echo -e "${BLUE}ℹ️ $*${NC}"; }
+warning() { echo -e "${YELLOW}⚠️ $*${NC}"; }
+
+# Variables
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+TESTS_DIR="examples"
+OUTPUT_DIR="test_output"
+LOG_FILE="$OUTPUT_DIR/test_results.log"
+PASSED=0
+FAILED=0
+TOTAL=0
+
+# Créer le répertoire de sortie
+mkdir -p "$OUTPUT_DIR"
+
+# Nettoyer le log
+> "$LOG_FILE"
+
+# Compiler le compilateur si nécessaire
+build_compiler() {
+    info "Vérification du compilateur..."
+    if [ ! -f "bin/algi" ]; then
+        info "Compilation du compilateur..."
+        make clean >/dev/null 2>&1 || true
+        make all >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            error "Échec de la compilation du compilateur"
+            return 1
+        fi
+    fi
+    success "Compilateur disponible"
+    return 0
+}
+
+# Lancer un test
+run_test() {
+    local file="$1"
+    local expected="$2"
+    local mode="$3"  # c ou asm
+    
+    TOTAL=$((TOTAL + 1))
+    local base=$(basename "$file" .algi)
+    local test_name="$(basename "$file") [$mode]"
+    
+    info "Test: $test_name"
+    
+    # Compiler
+    if [ "$mode" = "c" ]; then
+        ./algi-compile c "$file" >> "$LOG_FILE" 2>&1
+    else
+        ./algi-compile a "$file" >> "$LOG_FILE" 2>&1
+    fi
+    
+    if [ $? -ne 0 ]; then
+        error "Échec de la compilation: $test_name"
+        FAILED=$((FAILED + 1))
+        echo "  FAIL: Compilation failed" >> "$LOG_FILE"
+        return 1
+    fi
+    
+    # Exécuter
+    local exe="output/${base}"
+    if [ "$mode" = "asm" ]; then
+        exe="output/${base}_asm"
+    fi
+    
+    if [ ! -f "$exe" ]; then
+        error "Exécutable non trouvé: $exe"
+        FAILED=$((FAILED + 1))
+        return 1
+    fi
+    
+    local output_file="$OUTPUT_DIR/${base}_${mode}.out"
+    "$exe" > "$output_file" 2>&1
+    local exit_code=$?
+    
+    # Vérifier le résultat
+    if [ -n "$expected" ]; then
+        if grep -q "$expected" "$output_file"; then
+            success "Test réussi: $test_name"
+            PASSED=$((PASSED + 1))
+            echo "  PASS: Output matches expected" >> "$LOG_FILE"
+        else
+            error "Test échoué: $test_name"
+            FAILED=$((FAILED + 1))
+            echo "  FAIL: Output does not match expected" >> "$LOG_FILE"
+            echo "  Expected: $expected" >> "$LOG_FILE"
+            echo "  Got:" >> "$LOG_FILE"
+            cat "$output_file" >> "$LOG_FILE"
+        fi
+    else
+        if [ $exit_code -eq 0 ]; then
+            success "Test réussi: $test_name"
+            PASSED=$((PASSED + 1))
+            echo "  PASS: Exited successfully" >> "$LOG_FILE"
+        else
+            error "Test échoué: $test_name"
+            FAILED=$((FAILED + 1))
+            echo "  FAIL: Exit code $exit_code" >> "$LOG_FILE"
+        fi
+    fi
+}
+
+# Afficher le résumé
+show_summary() {
+    echo ""
+    echo "========================================"
+    echo "RÉSUMÉ DES TESTS"
+    echo "========================================"
+    echo "Total: $TOTAL"
+    echo -e "${GREEN}Réussis: $PASSED${NC}"
+    echo -e "${RED}Échoués: $FAILED${NC}"
+    
+    if [ $FAILED -eq 0 ]; then
+        success "Tous les tests sont passés ! 🎉"
+        return 0
+    else
+        error "$FAILED test(s) ont échoué"
+        echo ""
+        echo "Voir le log: $LOG_FILE"
+        return 1
+    fi
+}
+
+# Fonction principale
+main() {
+    info "Démarrage de la suite de tests..."
+    echo "----------------------------------------"
+    
+    build_compiler || exit 1
+    
+    # Tester tous les fichiers .algi
+    for file in "$TESTS_DIR"/*.algi; do
+        if [ -f "$file" ]; then
+            # Extraire le résultat attendu du commentaire
+            local expected=$(grep -o "// EXPECT:.*" "$file" | sed 's/\/\/ EXPECT: //')
+            
+            # Tester en mode C
+            run_test "$file" "$expected" "c"
+            
+            # Tester en mode ASM (si disponible)
+            # run_test "$file" "$expected" "asm"
+        fi
+    done
+    
+    echo "----------------------------------------"
+    show_summary
+    return $?
+}
+
+main "$@"

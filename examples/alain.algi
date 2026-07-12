@@ -1,0 +1,160 @@
+// Programme complet de démonstration
+
+tehap("========================================")
+tehap("  PROGRAMME DE DÉMONSTRATION ALGI")
+tehap("========================================")
+
+// === 1. Variables ===
+tehap("")
+tehap("=== 1. Variables et types ===")
+he nom = ""
+tehap("Entrez votre nom : ")
+keksie(nom)
+he age = 0
+tehap("Entrez votre age : ")
+keksie(age)
+he taille = 0.0
+tehap("Entrez votre taille (en mètres) : ")
+keksie(taille)
+tehap("")
+
+he est_majeur = nene
+tehap("Nom: " + nom)
+tehap("Âge: " + age)
+tehap("Taille: " + taille)
+tehap("Majeur: " + est_majeur)
+
+// === 2. Calculs ===
+tehap("")
+tehap("=== 2. Calculs arithmétiques ===")
+he a = 0
+he b = 0
+tehap("Entrez le premier nombre : ")
+keksie(a)
+tehap("Entrez le second nombre : ")
+keksie(b)
+
+tehap(a + " + " + b + " = " + (a + b))
+tehap(a + " - " + b + " = " + (a - b))
+tehap(a + " * " + b + " = " + (a * b))
+tehap(a + " / " + b + " = " + (a / b))
+tehap(a + " % " + b + " = " + (a % b))
+
+// === 3. Conditions ===
+tehap("")
+tehap("=== 3. Structures conditionnelles ===")
+he note = 82
+
+ke (note >= 90)
+    tehap("Excellent! ")
+mi
+ke (note >= 80 e note < 90)
+    tehap("Très bien! ")
+mi
+ke (note >= 70 e note < 80)
+    tehap("Bien! ")
+mi
+ke (note >= 60 e note < 70)
+    tehap("Passable! ")
+mi
+ke (note < 60)
+    tehap("À améliorer! ")
+mi
+
+// === 4. Boucles ===
+tehap("")
+tehap("=== 4. Boucles ===")
+
+tehap("Boucle 'w' (while):")
+he i = 1
+w (i <= 5)
+    tehap("  i = " + i)
+    i = i + 1
+mi
+
+tehap("Boucle 'pou' (for):")
+he nombres = bi[10, 20, 30, 40, 50]
+pou (val dans nombres)
+    tehap("  val = " + val)
+mi
+
+// === 5. Fonctions ===
+tehap("")
+tehap("=== 5. Fonctions ===")
+
+fonksion factorielle(nb)
+    ke (nb <= 1)
+        tem 1
+    kommenu
+        tem nb * factorielle(nb - 1)
+    mi
+mi
+
+fonksion fibonacci(nb)
+    ke (nb <= 1)
+        tem nb
+    kommenu
+        tem fibonacci(nb - 1) + fibonacci(nb - 2)
+    mi
+mi
+
+he ab = 0
+tehap("Entrez un nombre pour calculer sa factorielle : ")
+keksie(ab)
+tehap("Factorielle de " + ab + " = " + factorielle(ab))
+tehap("Entrez un nombre pour calculer la suite de Fibonacci : ")
+keksie(ab)
+tehap("Fibonacci(" + ab + ") = " + fibonacci(ab))
+
+// === 6. Listes ===
+tehap("")
+tehap("=== 6. Manipulation de listes ===")
+
+he fruits = bi["pomme", "banane", "orange"]
+tehap("Liste initiale: " + fruits)
+
+tehap("Parcours de la liste:")
+pou (fruit dans fruits)
+    tehap("  - " + fruit)
+mi
+
+// === 7. Gestion d'erreurs ===
+tehap("")
+tehap("=== 7. Gestion d'erreurs ===")
+
+
+tela
+    tehap("hi")
+    he division = 10 / 2
+    tehap("Résultat: " + division)
+tatem (erreur)
+    tehap("Erreur: " + erreur)
+mi
+
+// === 8. Opérateurs logiques ===
+tehap("")
+tehap("=== 8. Opérateurs logiques ===")
+
+he x = 5
+he y = 10
+he z = 7
+
+tehap("x < y et y > z: " + ((x < y) e (y > z)))
+tehap("x > y ou z > y: " + ((x > y) ou (z > y)))
+tehap("poke (x est y): " + poke (x est y))
+
+// === 9. Test 'est' ===
+tehap("")
+tehap("=== 9. Opérateur 'est' ===")
+
+he valeur = 42
+tehap("valeur est 42? " + (valeur est 42))
+tehap("valeur est 50? " + (valeur est 50))
+
+// === 10. Fin ===
+tehap("")
+tehap("========================================")
+tehap("  FIN DU PROGRAMME")
+tehap("  Auteur: Alain")
+tehap("  Merci d'avoir testé ALGI! 🎉")
+tehap("========================================")

@@ -1,0 +1,55 @@
+// tests/test_lexer.algi
+// Petit test de bout en bout couvrant les principaux tokens du lexer/parseur
+// (mots-clés de structure, opérateurs, littéraux, listes, fonctions).
+
+he a = 10
+he b = 3.5
+he nom = "ALGI"
+he vrai_bool = nene
+he faux_bool = pok
+he rien = n
+
+tehap("=== Test lexer/parseur ===")
+tehap(a)
+tehap(b)
+tehap(nom)
+tehap(vrai_bool)
+tehap(faux_bool)
+
+// Opérateurs arithmétiques
+tehap(a + b)
+tehap(a - b)
+tehap(a * b)
+tehap(a / b)
+tehap(a % 3)
+
+// Opérateurs de comparaison
+ke (a > b e vrai_bool)
+    tehap("comparaison + logique OK")
+kommenu
+    tehap("echec comparaison")
+mi
+
+// Listes et boucle pou/dans
+he nombres = bi[1, 2, 3, 4]
+pou (nb dans nombres)
+    tehap(nb)
+mi
+
+// Fonction avec paramètres et retour
+fonksion carre(x)
+    tem x * x
+mi
+tehap(carre(6))
+
+// Boucle while + peu (break)
+he i = 0
+w (i < 10)
+    ke (i est 3)
+        peu
+    mi
+    i = i + 1
+mi
+tehap(i)
+
+tehap("=== Fin test lexer ===")

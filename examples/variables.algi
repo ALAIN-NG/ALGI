@@ -1,0 +1,16 @@
+// Test des variables et calculs
+
+he age = 25
+he taille = 1.75
+he nom = "Alain"
+
+tehap("=== Informations personnelles ===")
+tehap("Nom: " + nom)
+tehap("Age: " + age)
+tehap("Taille: " + taille)
+
+he est_majeur = (age >= 18)
+tehap("Majeur? " + est_majeur)
+
+he imc = taille * taille
+tehap("Taille au carre: " + imc)

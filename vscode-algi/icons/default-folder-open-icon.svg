@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <path
+    d="M3 6
+       a1 1 0 0 1 1 -1
+       H12 L15 8
+       H27
+       a1 1 0 0 1 1 1.2
+       L26 25
+       a1 1 0 0 1 -1 1
+       H4
+       a1 1 0 0 1 -1 -1
+       Z"
+    fill="#A9BAD6"
+  />
+</svg>

@@ -1,0 +1,411 @@
+#!/bin/bash
+# Script d'exécution automatique pour le compilateur ALGI
+# Usage: ./algi [options] fichier.algi
+
+set -e
+
+# Couleurs pour l'affichage
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Fonctions d'affichage
+error() {
+    echo -e "${RED}❌ Erreur: $*${NC}" >&2
+}
+
+success() {
+    echo -e "${GREEN}✅ $*${NC}"
+}
+
+info() {
+    echo -e "${BLUE}ℹ️ $*${NC}"
+}
+
+warning() {
+    echo -e "${YELLOW}⚠️ $*${NC}"
+}
+
+# Afficher l'aide
+show_help() {
+    cat << EOF
+🔧 ALGI Compiler - Script d'exécution automatique
+Usage: $0 [OPTIONS] FICHIER.algi
+
+Options:
+  -c, --c           Compiler vers C et exécuter
+  -a, --asm         Compiler vers Assembleur x86 et exécuter
+  -r, --run         Exécuter le fichier compilé (si déjà compilé)
+  -g, --gdb         Compiler vers C et exécuter avec GDB
+  -v, --verbose     Afficher les commandes exécutées
+  -h, --help        Afficher cette aide
+  --clean           Nettoyer les fichiers générés
+
+Exemples:
+  $0 -c examples/test.algi    # Compiler vers C et exécuter
+  $0 -a examples/test.algi    # Compiler vers assembleur et exécuter
+  $0 -g examples/test.algi    # Compiler vers C et exécuter avec GDB
+  $0 --clean                  # Nettoyer les fichiers générés
+
+EOF
+}
+
+# Variables globales
+VERBOSE=0
+CLEAN=0
+MODE=""
+FILENAME=""
+SOURCE_DIR="src"
+OUTPUT_DIR="output"
+BUILD_DIR="build"
+BIN_DIR="bin"
+RUNTIME_SRC="src/runtime.c"
+COMPILER="bin/algi"
+
+# Fonction de log verbose
+log_verbose() {
+    if [ $VERBOSE -eq 1 ]; then
+        echo -e "${YELLOW}🔧 $*${NC}"
+    fi
+}
+
+# Nettoyer les fichiers générés
+clean_files() {
+    info "Nettoyage des fichiers générés..."
+    rm -rf "$OUTPUT_DIR"/*.{o,c,asm,exe,out} 2>/dev/null || true
+    rm -rf "$BUILD_DIR" 2>/dev/null || true
+    rm -rf "$BIN_DIR" 2>/dev/null || true
+    rm -f examples/*.{c,o,asm,exe,out} 2>/dev/null || true
+    success "Nettoyage terminé"
+}
+
+# Créer les répertoires nécessaires
+create_dirs() {
+    mkdir -p "$OUTPUT_DIR"
+    mkdir -p "$BUILD_DIR"
+    mkdir -p "$BIN_DIR"
+}
+
+# Compiler le compilateur ALGI si nécessaire
+build_compiler() {
+    if [ ! -f "$COMPILER" ] || [ "$CLEAN" -eq 1 ]; then
+        info "Compilation du compilateur ALGI..."
+        if [ -f "Makefile" ]; then
+            make clean >/dev/null 2>&1 || true
+            make all
+            if [ $? -ne 0 ]; then
+                error "Échec de la compilation du compilateur"
+                return 1
+            fi
+        else
+            error "Makefile non trouvé"
+            return 1
+        fi
+        success "Compilateur ALGI compilé avec succès"
+    fi
+    return 0
+}
+
+# Compiler vers C
+compile_to_c() {
+    local input_file="$1"
+    local base_name=$(basename "$input_file" .algi)
+    local output_c="$OUTPUT_DIR/${base_name}.c"
+    local output_exe="$OUTPUT_DIR/${base_name}"
+    
+    info "Génération du code C depuis $input_file..."
+    if ! "$COMPILER" -c "$input_file" 2>&1; then
+        error "Échec de la génération du code C"
+        return 1
+    fi
+    
+    # Déplacer le fichier C généré vers output/
+    if [ -f "${base_name}.c" ]; then
+        mv "${base_name}.c" "$output_c" 2>/dev/null || true
+    elif [ -f "examples/${base_name}.c" ]; then
+        mv "examples/${base_name}.c" "$output_c" 2>/dev/null || true
+    else
+        # Chercher le fichier généré
+        local found=$(find . -maxdepth 2 -name "${base_name}.c" -type f | head -1)
+        if [ -n "$found" ]; then
+            mv "$found" "$output_c" 2>/dev/null || true
+        else
+            error "Fichier C généré non trouvé"
+            return 1
+        fi
+    fi
+    
+    success "Code C généré: $output_c"
+    
+    info "Compilation du code C..."
+    log_verbose "gcc -Wall -g -I./src -o $output_exe $output_c $RUNTIME_SRC -lm"
+    if ! gcc -Wall -g -I./src -o "$output_exe" "$output_c" "$RUNTIME_SRC" -lm 2>&1; then
+        error "Échec de la compilation du code C"
+        return 1
+    fi
+    
+    success "Exécutable créé: $output_exe"
+    echo "$output_exe"
+    return 0
+}
+
+# Compiler vers assembleur
+compile_to_asm() {
+    local input_file="$1"
+    local base_name=$(basename "$input_file" .algi)
+    local output_asm="$OUTPUT_DIR/${base_name}.asm"
+    local output_obj="$OUTPUT_DIR/${base_name}.o"
+    local output_exe="$OUTPUT_DIR/${base_name}_asm"
+    
+    info "Génération du code assembleur depuis $input_file..."
+    if ! "$COMPILER" -a "$input_file" 2>&1; then
+        error "Échec de la génération du code assembleur"
+        return 1
+    fi
+    
+    # Déplacer le fichier ASM généré vers output/
+    if [ -f "${base_name}.asm" ]; then
+        mv "${base_name}.asm" "$output_asm" 2>/dev/null || true
+    elif [ -f "examples/${base_name}.asm" ]; then
+        mv "examples/${base_name}.asm" "$output_asm" 2>/dev/null || true
+    else
+        local found=$(find . -maxdepth 2 -name "${base_name}.asm" -type f | head -1)
+        if [ -n "$found" ]; then
+            mv "$found" "$output_asm" 2>/dev/null || true
+        else
+            error "Fichier ASM généré non trouvé"
+            return 1
+        fi
+    fi
+    
+    success "Code assembleur généré: $output_asm"
+    
+    info "Assemblage du code..."
+    log_verbose "nasm -f elf32 -o $output_obj $output_asm"
+    if ! nasm -f elf32 -o "$output_obj" "$output_asm" 2>&1; then
+        error "Échec de l'assemblage"
+        return 1
+    fi
+    
+    info "Édition des liens..."
+    log_verbose "gcc -m32 -o $output_exe $output_obj -lc"
+    if ! gcc -m32 -o "$output_exe" "$output_obj" -lc 2>&1; then
+        warning "Échec de l'édition des liens en 32 bits, tentative avec -no-pie..."
+        if ! gcc -m32 -no-pie -o "$output_exe" "$output_obj" -lc 2>&1; then
+            error "Échec de l'édition des liens"
+            return 1
+        fi
+    fi
+    
+    success "Exécutable créé: $output_exe"
+    echo "$output_exe"
+    return 0
+}
+
+# Exécuter le programme
+run_program() {
+    local exe_file="$1"
+    shift
+    if [ ! -f "$exe_file" ]; then
+        error "Fichier exécutable non trouvé: $exe_file"
+        return 1
+    fi
+    info "Exécution du programme..."
+    echo "------------------------"
+    "$exe_file" "$@"
+    local exit_code=$?
+    echo "------------------------"
+    if [ $exit_code -ne 0 ]; then
+        warning "Programme terminé avec le code: $exit_code"
+    else
+        success "Programme terminé avec succès"
+    fi
+    return $exit_code
+}
+
+# Exécuter avec GDB
+run_with_gdb() {
+    local exe_file="$1"
+    if [ ! -f "$exe_file" ]; then
+        error "Fichier exécutable non trouvé: $exe_file"
+        return 1
+    fi
+    info "Exécution du programme avec GDB..."
+    if ! command -v gdb >/dev/null 2>&1; then
+        error "GDB n'est pas installé"
+        return 1
+    fi
+    gdb -q -ex "run" -ex "bt" -ex "quit" "$exe_file"
+    return $?
+}
+
+# Exécuter en mode verbose
+exec_verbose() {
+    local cmd="$1"
+    log_verbose "Exécution: $cmd"
+    eval "$cmd"
+}
+
+# Vérifier les prérequis
+check_prerequisites() {
+    local missing=()
+    command -v gcc >/dev/null 2>&1 || missing+=("gcc")
+    command -v nasm >/dev/null 2>&1 || missing+=("nasm")
+    command -v make >/dev/null 2>&1 || missing+=("make")
+    command -v bison >/dev/null 2>&1 || missing+=("bison")
+    command -v flex >/dev/null 2>&1 || missing+=("flex")
+    
+    if [ ${#missing[@]} -ne 0 ]; then
+        warning "Prérequis manquants: ${missing[*]}"
+        return 1
+    fi
+    return 0
+}
+
+# Fonction principale
+main() {
+    # Vérifier les prérequis
+    check_prerequisites || {
+        warning "Certains outils sont manquants. Les fonctionnalités peuvent être limitées."
+    }
+    
+    # Parser les arguments
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -c|--c)
+                MODE="c"
+                shift
+                ;;
+            -a|--asm)
+                MODE="asm"
+                shift
+                ;;
+            -r|--run)
+                MODE="run"
+                shift
+                ;;
+            -g|--gdb)
+                MODE="gdb"
+                shift
+                ;;
+            -v|--verbose)
+                VERBOSE=1
+                shift
+                ;;
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            --clean)
+                CLEAN=1
+                shift
+                ;;
+            *.algi)
+                FILENAME="$1"
+                shift
+                ;;
+            *)
+                error "Option inconnue: $1"
+                show_help
+                exit 1
+                ;;
+        esac
+    done
+    
+    # Gestion du nettoyage
+    if [ $CLEAN -eq 1 ]; then
+        clean_files
+        exit 0
+    fi
+    
+    # Créer les répertoires
+    create_dirs
+    
+    # Si mode run, on exécute directement
+    if [ "$MODE" = "run" ]; then
+        if [ -n "$FILENAME" ]; then
+            local base_name=$(basename "$FILENAME" .algi)
+            # Chercher l'exécutable
+            local exe_file="$OUTPUT_DIR/${base_name}"
+            if [ ! -f "$exe_file" ]; then
+                exe_file="$OUTPUT_DIR/${base_name}_asm"
+            fi
+            if [ ! -f "$exe_file" ]; then
+                error "Aucun exécutable trouvé pour $FILENAME"
+                exit 1
+            fi
+            run_program "$exe_file"
+            exit $?
+        else
+            error "Fichier source requis pour le mode run"
+            show_help
+            exit 1
+        fi
+    fi
+    
+    # Si mode gdb
+    if [ "$MODE" = "gdb" ]; then
+        if [ -z "$FILENAME" ]; then
+            error "Fichier source requis"
+            show_help
+            exit 1
+        fi
+        if [ ! -f "$FILENAME" ]; then
+            error "Fichier non trouvé: $FILENAME"
+            exit 1
+        fi
+        build_compiler || exit 1
+        local exe_file=""
+        if compile_to_c "$FILENAME"; then
+            exe_file=$(compile_to_c "$FILENAME")
+        else
+            error "Échec de la compilation vers C"
+            exit 1
+        fi
+        if [ -n "$exe_file" ]; then
+            run_with_gdb "$exe_file"
+        else
+            error "Exécutable non créé"
+            exit 1
+        fi
+        exit $?
+    fi
+    
+    # Mode c ou asm
+    if [ -z "$MODE" ] || [ "$MODE" = "c" ] || [ "$MODE" = "asm" ]; then
+        if [ -z "$FILENAME" ]; then
+            error "Fichier source requis"
+            show_help
+            exit 1
+        fi
+        if [ ! -f "$FILENAME" ]; then
+            error "Fichier non trouvé: $FILENAME"
+            exit 1
+        fi
+        
+        build_compiler || exit 1
+        
+        local exe_file=""
+        if [ "$MODE" = "asm" ]; then
+            exe_file=$(compile_to_asm "$FILENAME")
+        else
+            exe_file=$(compile_to_c "$FILENAME")
+        fi
+        
+        if [ -z "$exe_file" ]; then
+            error "Échec de la compilation"
+            exit 1
+        fi
+        
+        run_program "$exe_file"
+        exit $?
+    fi
+    
+    # Si aucun mode spécifié, afficher l'aide
+    show_help
+}
+
+# Exécution du script
+main "$@"

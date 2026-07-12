@@ -1,0 +1,47 @@
+// Programme de test pour ALGI
+
+// Déclaration de variables
+he age = 0
+he nom = ""
+tehap("Entrez votre nom :")
+keksie(nom)
+tehap("Entrez votre age :")
+keksie(age)
+he est_majeur = (age >= 18)
+
+// Affichage
+tehap("=== TEST ALGI ===")
+tehap(nom)
+tehap(age)
+tehap(est_majeur)
+
+// Condition
+ke (est_majeur)
+    tehap("Tu es majeur!")
+kommenu
+    tehap("Tu es mineur!")
+mi
+
+// Boucle while
+he i = 0
+w (i < 5)
+    tehap("i = " + i)
+    i = i + 1
+mi
+
+// Boucle for avec liste
+he nombres = bi[10, 20, 30, 40, 50]
+pou (nb dans nombres)
+    tehap("Nombre: " + nb)
+mi
+
+// Fonction
+fonksion carre(x)
+    tem x * x
+mi
+
+he resultat = carre(7.8)
+tehap("7.8 au carre = " + resultat)
+
+// Fin du programme
+tehap("=== FIN ===")
